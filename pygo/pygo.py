@@ -28,6 +28,7 @@ class Game:
         self.play_go.root.bind("<Down>", self.next_variation)
         self.play_go.root.bind("v", self.make_variation)
         self.play_go.root.bind("p", self.toggle_placement)
+        self.play_go.root.bind("u", self.undo)
         self.play_go.root.bind("<Shift-Left>", self.first_node_in_variation)
         self.play_go.root.bind("<Shift-Right>", self.last_node_in_variation)
         self.play_go.canvas.bind("<Button-1>", self.handle_move_event)
@@ -214,6 +215,31 @@ class Game:
             return "B"
         else:
             return "W"
+
+    ### HANDLE UNDO
+
+    def undo(self, event):
+        # @@@ much of this method could be in sgf library
+
+        # don't do anything if game not playable
+        if not self.is_playable:
+            self.display_result("GAME NOT PLAYABLE")
+            return
+
+        # don't do anything if not at end of variation
+        if self.current_node.next:
+            self.display_result("NOT AT END OF VARIATION")
+            return
+
+        if self.current_node.previous:
+            self.current_node = self.current_node.previous
+            self.current_node.next = None
+            self.current_node.parent.nodes = self.current_node.parent.nodes[:-1]
+            # @@@ possibly still need to remove variation links
+        else:
+            self.display_result("CAN'T UNDO START NODE")
+            return
+        self.draw_current_node()
         
     ### HANDLE CLICK
 
@@ -633,6 +659,7 @@ up-arrow to go to previous variation
 down-arrow to go to next variation
 shift-left-arrow to go to first node in variation
 shift-right-arrow to go to last node in variation
+'u' to undo a move
 'v' to make a new variation
 'p' to toggle play / place black / place white
 """)
