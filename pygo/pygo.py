@@ -244,6 +244,7 @@ class Game:
     ### HANDLE CLICK
 
     def handle_move_event(self, event):
+
         if self.placement:
             self.handle_placement(event)
             return
@@ -302,6 +303,7 @@ class Game:
         if self.go_game.is_occupied(x, y):
             # report to user
             self.display_result("ILLEGAL MOVE (ALREADY OCCUPIED)")
+            self.current_node.next = None
             return
 
         # set up some variables depending on whose go it is
@@ -318,8 +320,10 @@ class Game:
 
         if result.status == gogame.KO:
             self.display_result("ILLEGAL MOVE (KO)")
+            self.current_node.next = None
         elif result.status == gogame.SUICIDE:
             self.display_result("ILLEGAL MOVE (SUICIDE)")
+            self.current_node.next = None
         elif result.status == gogame.VALID:
             sgf_node.properties[move_property] = ["%s%s" % (sgf.SGF_POS[x], sgf.SGF_POS[y])]
             if sgf_node != self.current_node:
