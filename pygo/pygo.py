@@ -536,10 +536,9 @@ class PyGo:
         menu_bar = Menu(self.root)
         file_menu = Menu(menu_bar, name="file", tearoff=0)
         menu_bar.add_cascade(menu=file_menu, label="File", underline=0)
-        #file_menu.add_command(label="New SGF", command=self.new_sgf, underline=0)
+
         file_menu.add_command(label="Open SGF", command=self.open_sgf, underline=0)
         file_menu.add_command(label="Play Game", command=self.play_game, underline=0)
-        #file_menu.add_command(label="Append SGF", command=self.append_sgf, underline=0, state=DISABLED)
         file_menu.add_command(label="Save SGF", command=self.save_sgf, underline=0) # @@@ should be disabled
         file_menu.add_command(label="Quit", command=self.quit, underline=0)
         help_menu = Menu(menu_bar, name="help", tearoff=0)
