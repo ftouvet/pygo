@@ -548,9 +548,6 @@ class PyGo:
 
     ### MENU ACTIONS
         
-    def new_sgf(self):
-        pass # @@@
-
     def open_sgf(self):
         fn = tkFileDialog.askopenfilename(filetypes=[("Smart Game Format","*.sgf"),("All files","*")])
         if fn:
@@ -570,10 +567,6 @@ class PyGo:
         if play_game_dialog.board_size:
             self.game = Game(self, None, size=play_game_dialog.board_size, handicap=play_game_dialog.handicap, scale=self.scale)
 
-    def append_sgf(self):
-        fn = tkFileDialog.askopenfilename(filetypes=[("Smart Game Format","*.sgf"),("All files","*")])
-        # @@@
-    
     def save_sgf(self):
         if self.game:
             fn = tkFileDialog.asksaveasfilename(filetypes=[("Smart Game Format", "*.sgf"), ("All files", "*")])
