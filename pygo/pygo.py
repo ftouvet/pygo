@@ -61,7 +61,7 @@ class Game:
         elif self.placement == 1:
             self.placement = 2
         elif self.placement == 2:
-           self.placement = 0
+            self.placement = 0
         self.draw_current_node()
 
     def make_variation(self, event):
