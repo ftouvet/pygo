@@ -1,6 +1,5 @@
 # TODO
 # partial boards
-# x markers
 # numbers need to make blank if not on stone
 # allow resizing of canvas with automatic scaling of board
 
@@ -80,6 +79,8 @@ class ShowGo:
     TRIANGLE = "triangle"
     SQUARE = "square"
     CIRCLE = "circle"
+    SELECT = "select"
+    MARKER = "marker"
 
     BLACK = "black"
     WHITE = "white"
@@ -131,6 +132,7 @@ class ShowGo:
         r = int(self.stone_radius / 1.7)
         r1 = int(self.stone_radius / 1.8)
         r2 = int(self.stone_radius / 2.3)
+        r3 = int(self.stone_radius / 4)
         if shape == self.CIRCLE:
             item = self.canvas.create_oval(centre_x - r, centre_y - r, centre_x + r, centre_y + r,
                                     fill=None, outline=inverse_color, width=self.line_thickness)
@@ -143,6 +145,20 @@ class ShowGo:
             item = self.canvas.create_rectangle(centre_x - r2, centre_y - r2,
                                          centre_x + r2, centre_y + r2,
                                          fill=None, outline=inverse_color, width=self.line_thickness)
+        if shape == self.MARKER:
+            item = self.canvas.create_polygon(centre_x - r2, centre_y - r2,
+                                              centre_x, centre_y,
+                                              centre_x + r2, centre_y - r2,
+                                              centre_x, centre_y,
+                                              centre_x + r2, centre_y + r2,
+                                              centre_x, centre_y,
+                                              centre_x - r2, centre_y + r2,
+                                              centre_x, centre_y,
+                                         fill=None, outline=inverse_color, width=self.line_thickness)
+        if shape == self.SELECT:
+            item = self.canvas.create_rectangle(centre_x - r3, centre_y - r3,
+                                         centre_x + r3, centre_y + r3,
+                                         fill=inverse_color, outline=inverse_color, width=self.line_thickness)
         return item
     
     def draw_territory(self, x, y, color):
