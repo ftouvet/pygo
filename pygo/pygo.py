@@ -245,12 +245,23 @@ class Game:
         # @@@ much of this method could be in sgf library
 
         self.current_gametree = self.current_node.parent
+
         new_node = sgf.Node(self.current_gametree, self.current_node.previous)
         new_node.next = self.current_node
         self.current_node.previous = new_node
         if new_node.previous:
             new_node.previous.next = new_node
+
+        pos = self.current_gametree.nodes.index(self.current_node)
+        nodes1 = self.current_gametree.nodes[:pos]
+        nodes2 = self.current_gametree.nodes[pos:]
+        self.current_gametree.nodes = nodes1
+        self.current_gametree.nodes.append(new_node)
+        self.current_gametree.nodes.extend(nodes2)
+
         self.current_node = new_node
+        new_node = sgf.Node(self.current_gametree, self.current_node.previous)
+
         self.draw_current_node()
 
     ### HANDLE UNDO
