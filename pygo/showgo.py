@@ -156,7 +156,7 @@ class ShowGo:
                                    centre_x - r2, centre_y,
                                    fill=color, outline=color)
      
-    def draw_letter(self, x, y, letter):
+    def draw_label(self, x, y, label):
         blank = self.letter_fontsize / 1.5
         text_x = self.start_x + (self.scale * (x - 1))
         text_y = self.start_y + (self.scale * (y - 1))
@@ -173,7 +173,7 @@ class ShowGo:
         canvas.create_rectangle(x1, y1, x2, y2,
                                 fill=background, outline=background)
         canvas.create_text(text_x, text_y,
-                           text=letter, fill=inverse_color, font=self.letter_font)
+                           text=label, fill=inverse_color, font=self.letter_font)
 
 
 
