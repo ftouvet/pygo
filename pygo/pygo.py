@@ -275,17 +275,6 @@ class Game:
         x = self.show_go.get_x(event.x)
         y = self.show_go.get_y(event.y)
 
-        # if game is already finished...
-        if self.go_game.game_completed:
-            # ignore clicks outside board area
-            if x < 1 or y < 1 or x > self.size or y > self.size:
-                return
-            # otherwise toggle alive/dead status of group clicked on
-            self.toggle_group_alive_dead(x, y)
-            # draw current node
-            self.draw_current_node()
-            return
-        
         # @@@ does the following need to be here?
         if self.go_game.last_move_pass:
             self.display_result("PASS")
