@@ -30,6 +30,7 @@ class Game:
         self.play_go.root.bind("p", self.toggle_placement)
         self.play_go.root.bind("u", self.undo)
         self.play_go.root.bind("t", self.toggle_territory)
+        self.play_go.root.bind("i", self.insert_node)
         self.play_go.root.bind("<Shift-Left>", self.first_node_in_variation)
         self.play_go.root.bind("<Shift-Right>", self.last_node_in_variation)
         self.play_go.canvas.bind("<Button-1>", self.handle_move_event)
@@ -237,6 +238,20 @@ class Game:
             return "B"
         else:
             return "W"
+
+    ### HANDLE INSERT NODE
+
+    def insert_node(self, event):
+        # @@@ much of this method could be in sgf library
+
+        self.current_gametree = self.current_node.parent
+        new_node = sgf.Node(self.current_gametree, self.current_node.previous)
+        new_node.next = self.current_node
+        self.current_node.previous = new_node
+        if new_node.previous:
+            new_node.previous.next = new_node
+        self.current_node = new_node
+        self.draw_current_node()
 
     ### HANDLE UNDO
 
@@ -751,6 +766,7 @@ shift-right-arrow to go to last node in variation\n
 'p' to toggle play / place black / place white
 'c' to continue playing from end of a loaded game
 't' to toggle territory/score
+'i' to insert a new node
 """)
 
     def show_about(self):

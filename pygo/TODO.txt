@@ -1,5 +1,4 @@
 - prohibit place stones on node with move
-- insertion of nodes
 - ability to save territory/score in SGF as node
 - editing and adding of properties (especially comments)
 - better display of variations
