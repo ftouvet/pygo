@@ -11,7 +11,7 @@ import showgo
 import sgf
 
 app_name = "PyGo"
-version = "0.9.0"
+version = "0.10.0"
 
 
 class Game:
