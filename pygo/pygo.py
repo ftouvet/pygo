@@ -27,9 +27,11 @@ class Game:
         self.play_go.root.bind("<Up>", self.prev_variation)
         self.play_go.root.bind("<Down>", self.next_variation)
         self.play_go.root.bind("v", self.make_variation)
+        self.play_go.root.bind("p", self.toggle_placement)
         self.play_go.root.bind("<Shift-Left>", self.first_node_in_variation)
         self.play_go.root.bind("<Shift-Right>", self.last_node_in_variation)
         self.play_go.canvas.bind("<Button-1>", self.handle_move_event)
+        self.placement = 0
         if collection:
             self.is_playable = 0
             self.collection = collection
@@ -51,6 +53,15 @@ class Game:
             self.current_node.properties["GM"] = ["1"]
             self.current_node.properties["AP"] = ["%s:%s" % (app_name, version)]
         self.place_handicap_stones(handicap)
+        self.draw_current_node()
+
+    def toggle_placement(self, event):
+        if self.placement == 0:
+            self.placement = 1
+        elif self.placement == 1:
+            self.placement = 2
+        elif self.placement == 2:
+           self.placement = 0
         self.draw_current_node()
 
     def make_variation(self, event):
@@ -117,7 +128,11 @@ class Game:
     ### STATUS DISPLAY
 
     def display_state(self):
-        if not self.is_playable:
+        if self.placement == 1:
+            self.play_go.label1.config(text = "PLACE BLACK STONES")
+        elif self.placement == 2:
+            self.play_go.label1.config(text = "PLACE WHITE STONES")
+        elif not self.is_playable:
             self.play_go.label1.config(text = "")
         elif self.current_node.next: # not at end of a variation
             self.play_go.label1.config(text = "")
@@ -204,6 +219,9 @@ class Game:
     ### HANDLE CLICK
 
     def handle_move_event(self, event):
+        if self.placement:
+            self.handle_placement(event)
+            return
 
         # don't do anything if game not playable
         if not self.is_playable:
@@ -287,6 +305,33 @@ class Game:
             if len(result.prisoners) > 0: # if pieces captured...
                 self.display_result("%s %s CAPTURED" % (len(result.prisoners), prisoner_colour_name))
                 self.display_prisoner_count()
+
+    def handle_placement(self, event):
+
+        # get point coordinates clicked on
+        x = self.show_go.get_x(event.x)
+        y = self.show_go.get_y(event.y)
+
+        sgf_node = self.current_node
+
+        # if click outside board area...
+        if x < 1 or y > 1 or x > self.size or y > self.size:
+            # do nothing
+            return
+
+        if self.placement == 1:
+            colour = gogame.BLACK
+            property = "AB"
+        elif self.placement == 2:
+            colour = gogame.WHITE
+            property = "AW"
+
+        self.go_game.place_stone(x, y, colour)
+
+        if not sgf_node.properties.has_key(property):
+            sgf_node.properties[property] = []
+        sgf_node.properties[property].append("%s%s" % (sgf.SGF_POS[x], sgf.SGF_POS[y]))
+        self.draw_current_node()
 
     def draw_current_node(self):
         node = self.current_node
@@ -590,6 +635,7 @@ down-arrow to go to next variation
 shift-left-arrow to go to first node in variation
 shift-right-arrow to go to last node in variation
 'v' to make a new variation
+'p' to toggle play / place black / place white
 """)
 
     def show_about(self):
