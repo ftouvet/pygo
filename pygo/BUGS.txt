@@ -2,4 +2,3 @@ passes don't seem to get saved in SGF
 
 saved games seems too short
 
-placing stones after end of game don't appear
