@@ -4,6 +4,8 @@ import tkSimpleDialog
 import tkMessageBox
 import ScrolledText
 
+import sys
+
 import gogame
 import showgo
 import sgf
