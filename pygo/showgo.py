@@ -133,16 +133,16 @@ class ShowGo:
         r2 = int(self.stone_radius / 2.3)
         if shape == self.CIRCLE:
             item = self.canvas.create_oval(centre_x - r, centre_y - r, centre_x + r, centre_y + r,
-                                    fill=color, outline=inverse_color, width=self.line_thickness)
+                                    fill=None, outline=inverse_color, width=self.line_thickness)
         if shape == self.TRIANGLE:
             item = self.canvas.create_polygon(centre_x, centre_y - r, 
                                        centre_x - r1, centre_y + r2,
                                        centre_x + r1, centre_y + r2,
-                                       fill=color, outline=inverse_color, width=self.line_thickness)
+                                       fill=None, outline=inverse_color, width=self.line_thickness)
         if shape == self.SQUARE:
             item = self.canvas.create_rectangle(centre_x - r2, centre_y - r2,
                                          centre_x + r2, centre_y + r2,
-                                         fill=color, outline=inverse_color, width=self.line_thickness)
+                                         fill=None, outline=inverse_color, width=self.line_thickness)
         return item
     
     def draw_territory(self, x, y, color):
