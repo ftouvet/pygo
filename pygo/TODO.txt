@@ -1,26 +1,16 @@
-- implement undo
-- reimplement placing of stones
-- better Tk packing
-- support for SGF markers
-- better display of common properties
-- handle remove after suicide in SGF
-- allow resizing of canvas to scale baord
-- editing and adding of properties (especially comments)
-- optionally show atari
-- appending to existing SGF without creating a variation
-
-- partial boards in showgo
-- numbers in showgo need to make mask if not on stone
-- better display of variations
-
-- continue play of a saved game without creating a variation
-- new SGF game
-- handling of line-break in SGF values
-- accept SGF on command line
-- showing of territory/score in SGF game
 - ability to save territory/score in SGF as node
-
+- editing and adding of properties (especially comments)
+- better display of variations
+- better display of common properties
+- optionally show atari
+- ability to play problems
+- handling of line-break in SGF values
+- allow resizing of canvas to scale board
+- better Tk packing
 - ability to create problems
+- numbers in showgo need to make mask if not on stone
+- partial boards in showgo
+
 - user management
 - pluggable computer players
 - internet server games
