@@ -33,8 +33,6 @@ class GoGame:
         for i in range(size + 1):
             self.contents.append([EMPTY] * (size + 1))
 
-        #self.place_handicap_stones()
-
         if handicap:
             self.to_play = WHITE
         else:
@@ -48,27 +46,6 @@ class GoGame:
         self.last_ko_move = None
         self.last_ko_prisoner = None
 
-    #def place_handicap_stones(self):
-    #    # uses: handicap, size
-    #    # changes: contents
-    #    handicap_positions = [
-    #        [], [], [], [], [], [], [], [], [],
-    #        [(7,3),(3,7),(7,7),(3,3),(5,5),(3,5),(7,5),(5,3),(5,7)],
-    #        [], [], [],
-    #        [(10,4),(4,10),(10,10),(4,4),(7,7),(4,7),(10,7),(7,4),(7,10)],
-    #        [], [], [], [], [],
-    #        [(16,4),(4,16),(16,16),(4,4),(10,10),(4,10),(16,10),(10,4),(10,16)]
-    #        ]
-    #    h = self.handicap
-    #    if h == 6 or h == 8:
-    #        h = h + 1
-    #    for i in range(h):
-    #        (x, y) = handicap_positions[self.size][i]
-    #        if self.handicap == 6 or self.handicap == 8:
-    #            if (x, y) == ((self.size+1)/2, (self.size+1)/2):
-    #                continue
-    #        self.contents[x][y] = BLACK
-            
     def pass_move(self):
         # uses: to_play, last_move_pass
         # changes: to_play, move_number, game_completed
