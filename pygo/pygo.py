@@ -39,7 +39,6 @@ class Game:
             self.draw_current_node()
         else:
             self.is_playable = 1
-            self.go_game = gogame.GoGame(size, handicap)
             self.size = size
             self.collection = sgf.Collection()
             self.current_gametree = sgf.GameTree(self.collection)
