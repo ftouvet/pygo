@@ -29,10 +29,13 @@ class Game:
         self.play_go.root.bind("v", self.make_variation)
         self.play_go.root.bind("p", self.toggle_placement)
         self.play_go.root.bind("u", self.undo)
+        self.play_go.root.bind("t", self.toggle_territory)
         self.play_go.root.bind("<Shift-Left>", self.first_node_in_variation)
         self.play_go.root.bind("<Shift-Right>", self.last_node_in_variation)
         self.play_go.canvas.bind("<Button-1>", self.handle_move_event)
         self.placement = 0
+        self.show_territory = 0
+
         if collection:
             self.is_playable = 0
             self.play_go.root.bind("c", self.continue_game)
@@ -64,6 +67,13 @@ class Game:
             self.placement = 2
         elif self.placement == 2:
             self.placement = 0
+        self.draw_current_node()
+
+    def toggle_territory(self, event):
+        if self.show_territory == 0:
+            self.show_territory = 1
+        else:
+            self.show_territory = 0
         self.draw_current_node()
 
     def make_variation(self, event):
@@ -256,6 +266,17 @@ class Game:
     ### HANDLE CLICK
 
     def handle_move_event(self, event):
+
+        # if showing territory...
+        if self.show_territory:
+            # ignore clicks outside board area
+            if x < 1 or y < 1 or x > self.size or y > self.size:
+                return
+            # otherwise toggle alive/dead status of group clicked on
+            self.toggle_group_alive_dead(x, y)
+            # draw current node
+            self.draw_current_node()
+            return
 
         if self.placement:
             self.handle_placement(event)
@@ -590,7 +611,7 @@ class Game:
             self.display_result("PASS")
         else:
             self.display_result()
-        if self.is_playable and self.go_game.game_completed:
+        if self.show_territory:
             self.draw_territory()
 
 
@@ -729,6 +750,7 @@ shift-right-arrow to go to last node in variation\n
 'u' to undo a move
 'p' to toggle play / place black / place white
 'c' to continue playing from end of a loaded game
+'t' to toggle territory/score
 """)
 
     def show_about(self):
