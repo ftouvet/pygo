@@ -1,4 +1,4 @@
-placing stones in the middle of a loaded SGF after stones have been placed earlier on 
+allows placing of stones on node with a move
 
 passes don't seem to get saved in SGF
 
