@@ -503,7 +503,7 @@ class PlayGameDialog(tkSimpleDialog.Dialog):
 
 
 class PyGo:
-    def __init__(self):
+    def __init__(self, filename=None):
         self.scale = 25
         self.root = Tk()
         self.root.title(app_name + " " + version)
@@ -529,6 +529,8 @@ class PyGo:
         self.properties.grid(column=1, row=1)
 
         self.game = None
+        if filename:
+            self.open_sgf(filename)
 
     def create_menu(self):
         menu_bar = Menu(self.root)
@@ -548,8 +550,11 @@ class PyGo:
 
     ### MENU ACTIONS
         
-    def open_sgf(self):
-        fn = tkFileDialog.askopenfilename(filetypes=[("Smart Game Format","*.sgf"),("All files","*")])
+    def open_sgf(self, filename=None):
+        if filename:
+            fn = filename
+        else:
+            fn = tkFileDialog.askopenfilename(filetypes=[("Smart Game Format","*.sgf"),("All files","*")])
         if fn:
             try:
                 parser = sgf.Parser()
@@ -593,5 +598,8 @@ shift-right-arrow to go to last node in variation
     def show_about(self):
         tkMessageBox.showinfo("About", "%s %s\nby James Tauber\nhttp://jtauber.com/" % (app_name, version))
 
-p = PyGo()
+if len(sys.argv) > 1:
+    p = PyGo(sys.argv[1])
+else:
+    p = PyGo()
 p.root.mainloop()        
