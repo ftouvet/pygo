@@ -1,5 +1,3 @@
-allows placing of stones on node with a move
-
 passes don't seem to get saved in SGF
 
 saved games seems too short

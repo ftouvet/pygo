@@ -374,6 +374,11 @@ class Game:
 
     def handle_placement(self, event):
 
+        # can't place stones on a node with moves
+        if self.current_node.properties.has_key("B") or self.current_node.properties.has_key("W"):
+            self.display_result("CAN'T PLACE STONES ON A NODE WITH A MOVE")
+            return
+
         # get point coordinates clicked on
         x = self.show_go.get_x(event.x)
         y = self.show_go.get_y(event.y)
