@@ -361,6 +361,7 @@ class Game:
         if not sgf_node.properties.has_key(property):
             sgf_node.properties[property] = []
         sgf_node.properties[property].append("%s%s" % (sgf.SGF_POS[x], sgf.SGF_POS[y]))
+
         self.draw_current_node()
 
     def draw_current_node(self):
@@ -414,11 +415,20 @@ class Game:
             self.play_go.variations.insert(END, "***END***")
         self.play_go.variations.config(state=DISABLED)
 
-        # construct a list of nodes that apply to this game up until node being displayed, finding last size and handicap        
+        # construct a list of nodes that apply to this game up until
+        # (but not including) node being displayed,
+        # finding last size and handicap        
         # @@@ should this be in SGF module?
         node_list = []
         size = 0
         handicap = 0
+
+        if node.properties.has_key("SZ") and not size:
+            size = int(node.properties["SZ"][0])
+        if node.properties.has_key("HA") and not handicap:
+            handicap = int(node.properties["HA"][0])
+
+        node = node.previous
         while node:
             node_list.insert(0, node)
             if node.properties.has_key("SZ") and not size:
@@ -437,8 +447,6 @@ class Game:
         self.show_go = s = showgo.ShowGo(self.play_go.canvas, size, self.scale)
         self.go_game = g = gogame.GoGame(size, handicap=handicap)
 
-        x = 0
-
         def move_stone(move_property, s_colour, g_colour):
             pos = node.properties[move_property][0]
             if pos == "" or pos == "tt":
@@ -447,7 +455,7 @@ class Game:
                 x = ord(pos[0]) - 96
                 y = ord(pos[1]) - 96
                 s.draw_stone(x, y, s_colour)
-                result = g.move_stone(x, y, g_colour)
+                result = g.move_stone(x, y, g_colour, allow_suicide=1)
                 if result.status == gogame.VALID:
                     for (xx,yy) in result.prisoners:
                         s.erase_stone(xx,yy)
@@ -501,10 +509,36 @@ class Game:
                     yy = ord(pos[1])-96
                     s.draw_territory(xx, yy, s_colour)
 
+        def draw_shape(property, s_shape):
+            for pos in node.properties[property]:
+                if pos == "" or pos == "tt":
+                    continue
+                if ":" in pos:
+                    sx = ord(pos[0])-96
+                    sy = ord(pos[1])-96
+                    ex = ord(pos[3])-96
+                    ey = ord(pos[4])-96
+                    for xx in range(sx, ex + 1):
+                        for yy in range(sy, ey + 1):
+                            s.draw_shape(xx, yy, s_shape)
+                else:    
+                    xx = ord(pos[0])-96
+                    yy = ord(pos[1])-96
+                    s.draw_shape(xx, yy, s_shape)
+
+        def draw_label():
+            for value in node.properties["LB"]:
+                pos = value[:2]
+                if len(value) == 4:
+                    label = value[3]
+                else:
+                    label = value[3:5]
+                xx = ord(pos[0])-96
+                yy = ord(pos[1])-96
+                s.draw_label(xx, yy, label)
 
         # go through each node in list
         for node in node_list:
-
             if node.properties.has_key("B"):
                 move_stone("B", s.BLACK, gogame.BLACK)
             elif node.properties.has_key("W"):
@@ -516,13 +550,40 @@ class Game:
                     place_stones("AW", s.WHITE, gogame.WHITE)
                 if node.properties.has_key("AE"):
                     erase_stones("AE")
-            if node.properties.has_key("TB"):
-                draw_territory("TB", s.BLACK)
-            if node.properties.has_key("TW"):
-                draw_territory("TW", s.WHITE)
 
-        if x: # @@@ this is too much of a hack
-            s.draw_shape(x, y, s.SQUARE)
+        # display current_node
+        node = self.current_node
+        if node.properties.has_key("B"):
+            move_stone("B", s.BLACK, gogame.BLACK)
+            draw_shape("B", s.SELECT)
+        elif node.properties.has_key("W"):
+            move_stone("W", s.WHITE, gogame.WHITE)
+            draw_shape("W", s.SELECT)
+        else:
+            if node.properties.has_key("AB"):
+                place_stones("AB", s.BLACK, gogame.BLACK)
+            if node.properties.has_key("AW"):
+                place_stones("AW", s.WHITE, gogame.WHITE)
+            if node.properties.has_key("AE"):
+                erase_stones("AE")
+        if node.properties.has_key("TB"):
+            draw_territory("TB", s.BLACK)
+        if node.properties.has_key("TW"):
+            draw_territory("TW", s.WHITE)
+        if node.properties.has_key("TR"):
+            draw_shape("TR", s.TRIANGLE)
+        if node.properties.has_key("CR"):
+            draw_shape("CR", s.CIRCLE)
+        if node.properties.has_key("SQ"):
+            draw_shape("SQ", s.SQUARE)
+        if node.properties.has_key("SL"):
+            draw_shape("SL", s.SELECT)
+        if node.properties.has_key("MA"):
+            draw_shape("MA", s.MARKER)
+        if node.properties.has_key("LB"):
+            draw_label()
+
+
         self.display_state()
         self.display_prisoner_count()
         if self.go_game.last_move_pass:
