@@ -29,18 +29,16 @@ class Game:
         self.play_go.root.bind("v", self.make_variation)
         self.play_go.root.bind("<Shift-Left>", self.first_node_in_variation)
         self.play_go.root.bind("<Shift-Right>", self.last_node_in_variation)
+        self.play_go.canvas.bind("<Button-1>", self.handle_move_event)
         if collection:
             self.is_playable = 0
             self.collection = collection
             self.current_node = collection.children[0].nodes[0]
             self.draw_current_node()
-            self.play_go.canvas.unbind("<Button-1>")
-
         else:
             self.is_playable = 1
             self.go_game = gogame.GoGame(size, handicap)
             self.size = size
-            self.play_go.canvas.bind("<Button-1>", self.handle_move_event)
             self.collection = sgf.Collection()
             self.current_gametree = sgf.GameTree(self.collection)
             self.collection.children.append(self.current_gametree)
@@ -84,7 +82,6 @@ class Game:
         self.current_node = new_node
         self.current_gametree = tree2
         self.is_playable = 1
-        self.play_go.canvas.bind("<Button-1>", self.handle_move_event)
         self.draw_current_node()
 
     def place_handicap_stones(self, handicap):
@@ -207,6 +204,11 @@ class Game:
     ### HANDLE CLICK
 
     def handle_move_event(self, event):
+
+        # don't do anything if game not playable
+        if not self.is_playable:
+            self.display_result("GAME NOT PLAYABLE")
+            return
 
         # don't do anything if not at end of variation
         if self.current_node.next:
