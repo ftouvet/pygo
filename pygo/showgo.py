@@ -170,9 +170,9 @@ class ShowGo:
         else:
             inverse_color = self.BLACK
 
-        canvas.create_rectangle(x1, y1, x2, y2,
+        self.canvas.create_rectangle(x1, y1, x2, y2,
                                 fill=background, outline=background)
-        canvas.create_text(text_x, text_y,
+        self.canvas.create_text(text_x, text_y,
                            text=label, fill=inverse_color, font=self.letter_font)
 
 
