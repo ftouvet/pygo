@@ -170,6 +170,7 @@ class ShowGo:
         else:
             inverse_color = self.BLACK
 
+	background = self.canvas.config("background")[4]
         self.canvas.create_rectangle(x1, y1, x2, y2,
                                 fill=background, outline=background)
         self.canvas.create_text(text_x, text_y,
