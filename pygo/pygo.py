@@ -35,12 +35,14 @@ class Game:
         self.placement = 0
         if collection:
             self.is_playable = 0
+            self.play_go.root.bind("c", self.continue_game)
             self.collection = collection
             self.current_node = collection.children[0].nodes[0]
             self.draw_current_node()
         else:
             self.is_playable = 1
             self.size = size
+            self.play_go.root.unbind("c")
             self.collection = sgf.Collection()
             self.current_gametree = sgf.GameTree(self.collection)
             self.collection.children.append(self.current_gametree)
@@ -93,6 +95,16 @@ class Game:
         self.current_node = new_node
         self.current_gametree = tree2
         self.is_playable = 1
+        self.draw_current_node()
+
+    def continue_game(self, event):
+        # don't do anything if not at end of variation
+        if self.current_node.next:
+            self.display_result("NOT AT END OF VARIATION")
+            return
+
+        self.is_playable = 1
+        self.current_gametree = self.current_node.parent
         self.draw_current_node()
 
     def place_handicap_stones(self, handicap):
@@ -662,10 +674,11 @@ right-arrow to go to next node
 up-arrow to go to previous variation
 down-arrow to go to next variation
 shift-left-arrow to go to first node in variation
-shift-right-arrow to go to last node in variation
-'u' to undo a move
+shift-right-arrow to go to last node in variation\n
 'v' to make a new variation
+'u' to undo a move
 'p' to toggle play / place black / place white
+'c' to continue playing from end of a loaded game
 """)
 
     def show_about(self):
