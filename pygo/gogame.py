@@ -70,7 +70,7 @@ class GoGame:
         # changes: contents
         self.contents[x][y] = color
         
-    def move_stone(self, x, y, color=None):
+    def move_stone(self, x, y, color=None, allow_suicide=None):
         # uses: to_play, contents, game_completed, last_ko_move, last_ko_prisoner
         # changes: last_move_pass, contents, last_ko_move, last_ko_prisoner
         #          white_prisoner, black_prisoner, black_go, move_number
@@ -97,7 +97,16 @@ class GoGame:
                 if not new_prisoner in prisoners:
                     prisoners.append(new_prisoner)
 
+        suicide = 0
         if len(prisoners) == 0 and len(self.calculate_prisoners(x,y)) > 0:
+            if allow_suicide:
+                new_prisoners = self.calculate_prisoners(x, y)
+                for new_prisoner in new_prisoners:
+                    if not new_prisoner in prisoners:
+                        prisoners.append(new_prisoner)
+                if len(prisoners) > 0:
+                    suicide = 1
+            else:
                 self.contents[x][y] = EMPTY # reverse the move
                 return MoveResult(SUICIDE)
 
@@ -113,10 +122,17 @@ class GoGame:
             self.last_ko_prisoner = None
 
         for (xx, yy) in prisoners:
-            if color == BLACK:
-                self.white_prisoners = self.white_prisoners + 1
+            if not suicide:
+                if color == BLACK:
+                    self.white_prisoners = self.white_prisoners + 1
+                else:
+                    self.black_prisoners = self.black_prisoners + 1
             else:
-                self.black_prisoners = self.black_prisoners + 1
+                if color == BLACK:
+                    self.black_prisoners = self.black_prisoners + 1
+                else:
+                    self.white_prisoners = self.white_prisoners + 1
+                    
             self.contents[xx][yy] = EMPTY # remove the stones
 
         if color == BLACK:
