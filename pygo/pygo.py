@@ -240,7 +240,7 @@ class Game:
             self.display_result("CAN'T UNDO START NODE")
             return
         self.draw_current_node()
-        
+
     ### HANDLE CLICK
 
     def handle_move_event(self, event):
@@ -340,7 +340,7 @@ class Game:
         sgf_node = self.current_node
 
         # if click outside board area...
-        if x < 1 or y > 1 or x > self.size or y > self.size:
+        if x < 1 or y < 1 or x > self.size or y > self.size:
             # do nothing
             return
 
