@@ -22,31 +22,25 @@ class Game:
         play_go.variations.config(state=DISABLED)
         self.scale = scale
         self.dead_points = []
+        self.play_go.root.bind("<Left>", self.prev_node)
+        self.play_go.root.bind("<Right>", self.next_node)
+        self.play_go.root.bind("<Up>", self.prev_variation)
+        self.play_go.root.bind("<Down>", self.next_variation)
+        self.play_go.root.bind("v", self.make_variation)
+        self.play_go.root.bind("<Shift-Left>", self.first_node_in_variation)
+        self.play_go.root.bind("<Shift-Right>", self.last_node_in_variation)
         if collection:
             self.is_playable = 0
             self.collection = collection
             self.current_node = collection.children[0].nodes[0]
             self.draw_current_node()
             self.play_go.canvas.unbind("<Button-1>")
-            self.play_go.root.bind("<Left>", self.prev_node)
-            self.play_go.root.bind("<Right>", self.next_node)
-            self.play_go.root.bind("<Up>", self.prev_variation)
-            self.play_go.root.bind("<Down>", self.next_variation)
-            self.play_go.root.bind("v", self.make_variation)
-            self.play_go.root.bind("<Shift-Left>", self.first_node_in_variation)
-            self.play_go.root.bind("<Shift-Right>", self.last_node_in_variation)
+
         else:
             self.is_playable = 1
             self.go_game = gogame.GoGame(size, handicap)
             self.size = size
             self.play_go.canvas.bind("<Button-1>", self.handle_move_event)
-            self.play_go.root.bind("<Left>", self.prev_node)
-            self.play_go.root.bind("<Right>", self.next_node)
-            self.play_go.root.bind("<Up>", self.prev_variation)
-            self.play_go.root.bind("<Down>", self.next_variation)
-            self.play_go.root.bind("v", self.make_variation)
-            self.play_go.root.bind("<Shift-Left>", self.first_node_in_variation)
-            self.play_go.root.bind("<Shift-Right>", self.last_node_in_variation)
             self.collection = sgf.Collection()
             self.current_gametree = sgf.GameTree(self.collection)
             self.collection.children.append(self.current_gametree)
