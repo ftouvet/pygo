@@ -1,4 +1,2 @@
-passes don't seem to get saved in SGF
-
 saved games seems too short
 

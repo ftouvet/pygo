@@ -329,6 +329,7 @@ class Game:
             # treat as pass
             sgf_node.properties[self.move_property()] = [""]
             if sgf_node != self.current_node:
+                self.current_gametree.nodes.append(sgf_node)
                 self.current_node.next = sgf_node
                 self.current_node = sgf_node
             self.go_game.pass_move()
