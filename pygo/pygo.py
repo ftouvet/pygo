@@ -293,6 +293,10 @@ class Game:
 
     def handle_move_event(self, event):
 
+        # get point coordinates clicked on
+        x = self.show_go.get_x(event.x)
+        y = self.show_go.get_y(event.y)
+
         # if showing territory...
         if self.show_territory:
             # ignore clicks outside board area
@@ -317,10 +321,6 @@ class Game:
         if self.current_node.next:
             self.display_result("NOT AT END OF VARIATION")
             return
-
-        # get point coordinates clicked on
-        x = self.show_go.get_x(event.x)
-        y = self.show_go.get_y(event.y)
 
         # @@@ does the following need to be here?
         if self.go_game.last_move_pass:
